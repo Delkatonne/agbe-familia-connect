@@ -22,6 +22,13 @@ def create_app():
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
 
+    # Création automatique des tables + contenu d'exemple au démarrage
+    # (idempotent : ne réinsère rien si les données existent déjà)
+    with app.app_context():
+        from seed_data import inserer_contenu_exemple
+        db.create_all()
+        inserer_contenu_exemple()
+
     return app
 
 
