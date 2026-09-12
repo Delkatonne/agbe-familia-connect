@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Notre patrimoine — AGBE FAMILY{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <h2>Notre patrimoine</h2>
+
+    {% if elements %}
+        <div class="card-grid">
+            {% for element in elements %}
+                <div class="card">
+                    <img src="{{ element.photo_url or url_for('static', filename='img/exemple-patrimoine.jpg') }}" alt="{{ element.titre }}">
+                    <h3>{{ element.titre }}</h3>
+                    {% if element.description %}
+                        <p>{{ element.description }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Aucun élément de patrimoine enregistré pour le moment.</p>
+    {% endif %}
+</section>
+{% endblock %}

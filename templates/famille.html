@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}La famille — AGBE FAMILY{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <h2>La famille AGBE</h2>
+
+    {% if membres %}
+        <div class="card-grid">
+            {% for membre in membres %}
+                <div class="card">
+                    <img src="{{ membre.photo_url or url_for('static', filename='img/exemple-membre.jpg') }}" alt="{{ membre.nom }}">
+                    <h3>{{ membre.nom }}</h3>
+                    <p class="card-dates">
+                        {% if membre.date_naissance %}Né(e) le {{ membre.date_naissance.strftime('%d/%m/%Y') }}{% endif %}
+                        {% if membre.date_deces %} — Décédé(e) le {{ membre.date_deces.strftime('%d/%m/%Y') }}{% endif %}
+                    </p>
+                    {% if membre.biographie %}
+                        <p>{{ membre.biographie }}</p>
+                    {% endif %}
+                    {% if membre.parent %}
+                        <p class="card-meta">Enfant de {{ membre.parent.nom }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Aucun membre enregistré pour le moment.</p>
+    {% endif %}
+</section>
+{% endblock %}

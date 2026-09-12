@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}AGBE FAMILY — Accueil{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h2>Bienvenue dans la famille AGBE</h2>
+
+    <p>
+        Notre histoire, notre famille, nos traditions
+        et notre héritage.
+    </p>
+
+    {% if current_user.is_authenticated %}
+        <a href="{{ url_for('main.famille') }}" class="btn">Découvrir notre famille</a>
+    {% else %}
+        <a href="{{ url_for('auth.login') }}" class="btn">Découvrir notre famille</a>
+    {% endif %}
+</section>
+{% endblock %}

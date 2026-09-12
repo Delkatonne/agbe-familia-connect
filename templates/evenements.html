@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Événements — AGBE FAMILY{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <h2>Événements familiaux</h2>
+
+    {% if evenements %}
+        <div class="event-list">
+            {% for evenement in evenements %}
+                <div class="event-item">
+                    <div class="event-date">{{ evenement.date_evenement.strftime('%d/%m/%Y') }}</div>
+                    <div class="event-details">
+                        <h3>{{ evenement.titre }}</h3>
+                        {% if evenement.lieu %}<p class="event-lieu">📍 {{ evenement.lieu }}</p>{% endif %}
+                        {% if evenement.description %}<p>{{ evenement.description }}</p>{% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Aucun événement prévu pour le moment.</p>
+    {% endif %}
+</section>
+{% endblock %}
