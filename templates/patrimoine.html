@@ -5,15 +5,22 @@
 {% block content %}
 <section class="page-section">
     <h2>Notre patrimoine</h2>
+    <p style="margin-bottom: 20px;"><a href="{{ url_for('main.ajouter_patrimoine') }}" class="btn">+ Ajouter un élément</a></p>
 
     {% if elements %}
         <div class="card-grid">
             {% for element in elements %}
                 <div class="card">
-                    <img src="{{ element.photo_url or url_for('static', filename='img/exemple-patrimoine.jpg') }}" alt="{{ element.titre }}">
+                    <img src="{{ element.photo_data or element.photo_url or url_for('static', filename='img/exemple-patrimoine.jpg') }}" alt="{{ element.titre }}">
                     <h3>{{ element.titre }}</h3>
                     {% if element.description %}
                         <p>{{ element.description }}</p>
+                    {% endif %}
+                    {% if element.proprietaire_id == current_user.id %}
+                        <form method="POST" action="{{ url_for('main.supprimer_patrimoine', element_id=element.id) }}"
+                              onsubmit="return confirm('Supprimer cet élément ?');">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
                     {% endif %}
                 </div>
             {% endfor %}

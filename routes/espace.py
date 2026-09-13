@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash,
 from flask_login import login_required, current_user
 
 from extensions import db
-from models import FamilyMember, ChampPersonnalise
+from models import FamilyMember, ChampPersonnalise, PhotoProfil
 from utils import traiter_photo
 
 espace_bp = Blueprint("espace", __name__, url_prefix="/mon-espace")
@@ -81,6 +81,11 @@ def modifier_profil():
             mon_profil.telephone = telephone
             mon_profil.biographie = biographie
             if photo_data:
+                if mon_profil.photo_data:
+                    db.session.add(PhotoProfil(
+                        family_member_id=mon_profil.id,
+                        photo_data=mon_profil.photo_data,
+                    ))
                 mon_profil.photo_data = photo_data
         else:
             mon_profil = FamilyMember(
@@ -175,6 +180,11 @@ def modifier_parent(parent_id):
         parent.telephone = request.form.get("telephone", "").strip()
         parent.biographie = request.form.get("biographie", "").strip()
         if photo_data:
+            if parent.photo_data:
+                db.session.add(PhotoProfil(
+                    family_member_id=parent.id,
+                    photo_data=parent.photo_data,
+                ))
             parent.photo_data = photo_data
 
         mon_profil = FamilyMember.query.filter_by(

@@ -38,7 +38,7 @@ class FamilyMember(db.Model):
     biographie = db.Column(db.Text, nullable=True)
     telephone = db.Column(db.String(30), nullable=True)
     photo_url = db.Column(db.String(300), nullable=True)
-    photo_data = db.Column(db.Text, nullable=True)  # image envoyée par l'utilisateur (data URI base64)
+    photo_data = db.Column(db.Text, nullable=True)  # photo de profil actuelle (data URI base64)
     profession = db.Column(db.String(200), nullable=True)
 
     # Lien de parenté affiché (ex: "Père", "Mère", "Autre") — vide si c'est le profil de l'utilisateur lui-même
@@ -95,6 +95,71 @@ class PhotoGalerie(db.Model):
         return f"<PhotoGalerie {self.titre}>"
 
 
+class PhotoProfil(db.Model):
+    """Historique des anciennes photos de profil d'un membre (comme sur Facebook)."""
+    __tablename__ = "photos_profil_historique"
+
+    id = db.Column(db.Integer, primary_key=True)
+    family_member_id = db.Column(db.Integer, db.ForeignKey("family_members.id"), nullable=False)
+    photo_data = db.Column(db.Text, nullable=False)
+    date_ajout = db.Column(db.DateTime, default=datetime.utcnow)
+
+    membre = db.relationship(
+        "FamilyMember",
+        backref=db.backref(
+            "anciennes_photos",
+            cascade="all, delete-orphan",
+            order_by="PhotoProfil.date_ajout.desc()",
+        ),
+    )
+
+    def __repr__(self):
+        return f"<PhotoProfil membre={self.family_member_id}>"
+
+
+class Publication(db.Model):
+    """Publication sur le journal d'actualité d'un membre (comme un mur Facebook)."""
+    __tablename__ = "publications"
+
+    id = db.Column(db.Integer, primary_key=True)
+    family_member_id = db.Column(db.Integer, db.ForeignKey("family_members.id"), nullable=False)
+    auteur_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    contenu = db.Column(db.Text, nullable=False)
+    photo_data = db.Column(db.Text, nullable=True)
+    date_publication = db.Column(db.DateTime, default=datetime.utcnow)
+
+    membre = db.relationship(
+        "FamilyMember",
+        backref=db.backref(
+            "publications",
+            cascade="all, delete-orphan",
+            order_by="Publication.date_publication.desc()",
+        ),
+    )
+    auteur = db.relationship("User")
+
+    def __repr__(self):
+        return f"<Publication {self.id}>"
+
+
+class Message(db.Model):
+    """Message privé entre deux membres inscrits."""
+    __tablename__ = "messages"
+
+    id = db.Column(db.Integer, primary_key=True)
+    expediteur_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    destinataire_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    contenu = db.Column(db.Text, nullable=False)
+    date_envoi = db.Column(db.DateTime, default=datetime.utcnow)
+    lu = db.Column(db.Boolean, default=False)
+
+    expediteur = db.relationship("User", foreign_keys=[expediteur_id])
+    destinataire = db.relationship("User", foreign_keys=[destinataire_id])
+
+    def __repr__(self):
+        return f"<Message {self.expediteur_id} -> {self.destinataire_id}>"
+
+
 class Event(db.Model):
     __tablename__ = "events"
 
@@ -103,6 +168,9 @@ class Event(db.Model):
     description = db.Column(db.Text, nullable=True)
     date_evenement = db.Column(db.Date, nullable=False)
     lieu = db.Column(db.String(200), nullable=True)
+    proprietaire_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
+
+    proprietaire = db.relationship("User", backref="evenements_ajoutes")
 
     def __repr__(self):
         return f"<Event {self.titre}>"
@@ -116,6 +184,10 @@ class HeritageItem(db.Model):
     titre = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=True)
     photo_url = db.Column(db.String(300), nullable=True)
+    photo_data = db.Column(db.Text, nullable=True)
+    proprietaire_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
+
+    proprietaire = db.relationship("User", backref="patrimoine_ajoute")
 
     def __repr__(self):
         return f"<HeritageItem {self.titre}>"

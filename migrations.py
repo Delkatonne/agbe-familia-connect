@@ -26,6 +26,9 @@ def appliquer_migrations():
         "ALTER TABLE family_members ADD COLUMN IF NOT EXISTS photo_data TEXT",
         "ALTER TABLE family_members ADD COLUMN IF NOT EXISTS pere_id INTEGER REFERENCES family_members(id)",
         "ALTER TABLE family_members ADD COLUMN IF NOT EXISTS mere_id INTEGER REFERENCES family_members(id)",
+        "ALTER TABLE events ADD COLUMN IF NOT EXISTS proprietaire_id INTEGER REFERENCES users(id)",
+        "ALTER TABLE heritage_items ADD COLUMN IF NOT EXISTS proprietaire_id INTEGER REFERENCES users(id)",
+        "ALTER TABLE heritage_items ADD COLUMN IF NOT EXISTS photo_data TEXT",
     ]
     for instruction in instructions:
         try:

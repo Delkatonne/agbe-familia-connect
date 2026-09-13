@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Ajouter au patrimoine — AGBE FAMILY{% endblock %}
+
+{% block content %}
+<section class="form-section">
+    <h2>Ajouter un élément au patrimoine</h2>
+
+    <form method="POST" class="auth-form" enctype="multipart/form-data">
+        <label for="titre">Titre</label>
+        <input type="text" id="titre" name="titre" required>
+
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4"></textarea>
+
+        <label for="photo">Photo (optionnelle)</label>
+        <input type="file" id="photo" name="photo" accept="image/*">
+
+        <button type="submit" class="btn">Ajouter</button>
+    </form>
+
+    <p class="form-footer">
+        <a href="{{ url_for('main.patrimoine') }}">← Retour au patrimoine</a>
+    </p>
+</section>
+{% endblock %}

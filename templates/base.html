@@ -21,6 +21,7 @@
                 <a href="{{ url_for('main.patrimoine') }}">Notre patrimoine</a>
                 <a href="{{ url_for('main.evenements') }}">Événements</a>
                 <a href="{{ url_for('espace.index') }}">Mon espace</a>
+                <a href="{{ url_for('messages.index') }}">Messages{% if nombre_messages_non_lus %} ({{ nombre_messages_non_lus }}){% endif %}</a>
                 <a href="{{ url_for('auth.logout') }}">Déconnexion ({{ current_user.nom_profil or current_user.nom }})</a>
             {% else %}
                 <a href="{{ url_for('auth.login') }}">Connexion</a>

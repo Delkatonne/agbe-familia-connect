@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Ajouter un événement — AGBE FAMILY{% endblock %}
+
+{% block content %}
+<section class="form-section">
+    <h2>Ajouter un événement</h2>
+
+    <form method="POST" class="auth-form">
+        <label for="titre">Titre</label>
+        <input type="text" id="titre" name="titre" required>
+
+        <label for="date_evenement">Date</label>
+        <input type="date" id="date_evenement" name="date_evenement" required>
+
+        <label for="lieu">Lieu</label>
+        <input type="text" id="lieu" name="lieu">
+
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4"></textarea>
+
+        <button type="submit" class="btn">Ajouter</button>
+    </form>
+
+    <p class="form-footer">
+        <a href="{{ url_for('main.evenements') }}">← Retour aux événements</a>
+    </p>
+</section>
+{% endblock %}

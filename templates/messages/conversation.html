@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Conversation avec {{ correspondant.nom_profil or correspondant.nom }} — AGBE FAMILY{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <p><a href="{{ url_for('messages.index') }}">← Toutes les conversations</a></p>
+    <h2>{{ correspondant.nom_profil or correspondant.nom }}</h2>
+
+    <div class="fil-messages">
+        {% for message in messages_thread %}
+            <div class="bulle-message {{ 'bulle-envoyee' if message.expediteur_id == current_user.id else 'bulle-recue' }}">
+                <p>{{ message.contenu }}</p>
+                <span class="bulle-date">{{ message.date_envoi.strftime('%d/%m/%Y à %H:%M') }}</span>
+            </div>
+        {% else %}
+            <p>Aucun message pour le moment. Dites bonjour !</p>
+        {% endfor %}
+    </div>
+
+    <form method="POST" class="form-envoi-message">
+        <textarea name="contenu" rows="2" placeholder="Écrire un message..." required></textarea>
+        <button type="submit" class="btn">Envoyer</button>
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}{{ membre.nom }} — AGBE FAMILY{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="card" style="max-width: 600px; margin: 0 auto 30px;">
+        <img src="{{ membre.photo_data or membre.photo_url or url_for('static', filename='img/exemple-membre.jpg') }}" alt="{{ membre.nom }}">
+        <h2>{{ membre.nom }}</h2>
+        {% if membre.lien_parente %}<p class="card-meta">{{ membre.lien_parente }}</p>{% endif %}
+        {% if membre.date_naissance %}<p class="card-dates">Né(e) le {{ membre.date_naissance.strftime('%d/%m/%Y') }}</p>{% endif %}
+        {% if membre.profession %}<p>Profession : {{ membre.profession }}</p>{% endif %}
+        {% if membre.telephone %}<p>Téléphone : {{ membre.telephone }}</p>{% endif %}
+        {% if membre.biographie %}<p>{{ membre.biographie }}</p>{% endif %}
+
+        {% if membre.champs_personnalises %}
+            <div class="champs-perso">
+                {% for champ in membre.champs_personnalises %}
+                    <div class="champ-perso">
+                        <span><strong>{{ champ.titre }}</strong> : {{ champ.valeur }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if peut_envoyer_message %}
+            <a href="{{ url_for('messages.conversation', user_id=membre.proprietaire_id) }}" class="btn">Envoyer un message</a>
+        {% endif %}
+        {% if est_mon_profil %}
+            <a href="{{ url_for('espace.modifier_profil') }}" class="btn">Modifier mon profil</a>
+        {% endif %}
+    </div>
+
+    {% if membre.anciennes_photos %}
+        <h3 style="margin-bottom: 16px;">Anciennes photos de profil</h3>
+        <div class="anciennes-photos">
+            {% for ancienne in membre.anciennes_photos %}
+                <img src="{{ ancienne.photo_data }}" alt="Ancienne photo" title="{{ ancienne.date_ajout.strftime('%d/%m/%Y') }}">
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <h3 style="margin-top: 40px; margin-bottom: 16px;">Journal d'actualité</h3>
+
+    {% if est_mon_profil %}
+        <form method="POST" action="{{ url_for('main.ajouter_publication', membre_id=membre.id) }}"
+              class="auth-form" enctype="multipart/form-data" style="max-width: 600px; margin-bottom: 24px;">
+            <label for="contenu">Quoi de neuf ?</label>
+            <textarea id="contenu" name="contenu" rows="3" required></textarea>
+            <label for="photo">Photo (optionnelle)</label>
+            <input type="file" id="photo" name="photo" accept="image/*">
+            <button type="submit" class="btn">Publier</button>
+        </form>
+    {% endif %}
+
+    {% if membre.publications %}
+        <div class="journal">
+            {% for publication in membre.publications %}
+                <div class="publication">
+                    <p class="publication-meta">
+                        {{ publication.auteur.nom_profil or publication.auteur.nom }} —
+                        {{ publication.date_publication.strftime('%d/%m/%Y à %H:%M') }}
+                    </p>
+                    <p>{{ publication.contenu }}</p>
+                    {% if publication.photo_data %}
+                        <img src="{{ publication.photo_data }}" alt="Photo publiée">
+                    {% endif %}
+                    {% if publication.auteur_id == current_user.id %}
+                        <form method="POST" action="{{ url_for('main.supprimer_publication', publication_id=publication.id) }}"
+                              onsubmit="return confirm('Supprimer cette publication ?');">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Aucune publication pour le moment.</p>
+    {% endif %}
+</section>
+{% endblock %}

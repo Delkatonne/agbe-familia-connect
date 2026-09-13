@@ -21,6 +21,13 @@
                     {% if membre.biographie %}
                         <p>{{ membre.biographie }}</p>
                     {% endif %}
+
+                    {% if membre.est_soi %}
+                        <a href="{{ url_for('main.profil_membre', membre_id=membre.id) }}" class="btn">Voir le profil</a>
+                        {% if membre.proprietaire_id and membre.proprietaire_id != current_user.id %}
+                            <a href="{{ url_for('messages.conversation', user_id=membre.proprietaire_id) }}" class="btn">Message</a>
+                        {% endif %}
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>

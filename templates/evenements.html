@@ -5,6 +5,7 @@
 {% block content %}
 <section class="page-section">
     <h2>Événements familiaux</h2>
+    <p style="margin-bottom: 20px;"><a href="{{ url_for('main.ajouter_evenement') }}" class="btn">+ Ajouter un événement</a></p>
 
     {% if evenements %}
         <div class="event-list">
@@ -15,6 +16,12 @@
                         <h3>{{ evenement.titre }}</h3>
                         {% if evenement.lieu %}<p class="event-lieu">📍 {{ evenement.lieu }}</p>{% endif %}
                         {% if evenement.description %}<p>{{ evenement.description }}</p>{% endif %}
+                        {% if evenement.proprietaire_id == current_user.id %}
+                            <form method="POST" action="{{ url_for('main.supprimer_evenement', evenement_id=evenement.id) }}"
+                                  onsubmit="return confirm('Supprimer cet événement ?');">
+                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                            </form>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Messages — AGBE FAMILY{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <h2>Messages</h2>
+
+    {% if conversations %}
+        <div class="liste-conversations">
+            {% for conv in conversations %}
+                <a href="{{ url_for('messages.conversation', user_id=conv.correspondant.id) }}" class="conversation-item">
+                    <span class="conversation-nom">
+                        {{ conv.correspondant.nom_profil or conv.correspondant.nom }}
+                        {% if conv.non_lus %}<span class="badge-non-lu">{{ conv.non_lus }}</span>{% endif %}
+                    </span>
+                    <span class="conversation-apercu">{{ conv.dernier_message.contenu[:60] }}</span>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Vous n'avez aucune conversation pour le moment.</p>
+    {% endif %}
+
+    {% if autres_membres %}
+        <h3 style="margin-top: 40px; margin-bottom: 16px;">Démarrer une nouvelle conversation</h3>
+        <div class="liste-conversations">
+            {% for membre in autres_membres %}
+                <a href="{{ url_for('messages.conversation', user_id=membre.id) }}" class="conversation-item">
+                    <span class="conversation-nom">{{ membre.nom_profil or membre.nom }}</span>
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
