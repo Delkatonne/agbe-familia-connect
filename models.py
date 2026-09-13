@@ -15,6 +15,7 @@ class User(UserMixin, db.Model):
     mot_de_passe_hash = db.Column(db.String(255), nullable=False)
     date_naissance = db.Column(db.Date, nullable=True)
     profession = db.Column(db.String(200), nullable=True)
+    telephone = db.Column(db.String(30), nullable=True)
     date_inscription = db.Column(db.DateTime, default=datetime.utcnow)
 
     def set_password(self, mot_de_passe):
@@ -35,6 +36,7 @@ class FamilyMember(db.Model):
     date_naissance = db.Column(db.Date, nullable=True)
     date_deces = db.Column(db.Date, nullable=True)
     biographie = db.Column(db.Text, nullable=True)
+    telephone = db.Column(db.String(30), nullable=True)
     photo_url = db.Column(db.String(300), nullable=True)
     photo_data = db.Column(db.Text, nullable=True)  # image envoyée par l'utilisateur (data URI base64)
     profession = db.Column(db.String(200), nullable=True)
@@ -47,12 +49,50 @@ class FamilyMember(db.Model):
     proprietaire_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
     proprietaire = db.relationship("User", foreign_keys=[proprietaire_id], backref="membres_ajoutes")
 
-    # Lien vers un parent (pour construire un arbre généalogique simple)
-    parent_id = db.Column(db.Integer, db.ForeignKey("family_members.id"), nullable=True)
-    enfants = db.relationship("FamilyMember", backref=db.backref("parent", remote_side=[id]), foreign_keys=[parent_id])
+    # Liens père/mère (pour l'arbre généalogique) — renseignés automatiquement
+    # quand l'utilisateur ajoute un parent avec le lien "Père" ou "Mère"
+    pere_id = db.Column(db.Integer, db.ForeignKey("family_members.id"), nullable=True)
+    mere_id = db.Column(db.Integer, db.ForeignKey("family_members.id"), nullable=True)
+    pere = db.relationship("FamilyMember", foreign_keys=[pere_id], remote_side=[id])
+    mere = db.relationship("FamilyMember", foreign_keys=[mere_id], remote_side=[id])
 
     def __repr__(self):
         return f"<FamilyMember {self.nom}>"
+
+
+class ChampPersonnalise(db.Model):
+    """Information libre qu'un membre ajoute à son profil (ou à celui d'un parent qu'il gère)."""
+    __tablename__ = "champs_personnalises"
+
+    id = db.Column(db.Integer, primary_key=True)
+    family_member_id = db.Column(db.Integer, db.ForeignKey("family_members.id"), nullable=False)
+    titre = db.Column(db.String(100), nullable=False)
+    valeur = db.Column(db.Text, nullable=False)
+
+    membre = db.relationship(
+        "FamilyMember",
+        backref=db.backref("champs_personnalises", cascade="all, delete-orphan"),
+    )
+
+    def __repr__(self):
+        return f"<ChampPersonnalise {self.titre}>"
+
+
+class PhotoGalerie(db.Model):
+    """Photo partagée dans la galerie familiale (pas liée à un profil précis)."""
+    __tablename__ = "photos_galerie"
+
+    id = db.Column(db.Integer, primary_key=True)
+    titre = db.Column(db.String(200), nullable=True)
+    description = db.Column(db.Text, nullable=True)
+    photo_data = db.Column(db.Text, nullable=False)
+    proprietaire_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
+    date_ajout = db.Column(db.DateTime, default=datetime.utcnow)
+
+    proprietaire = db.relationship("User", backref="photos_ajoutees")
+
+    def __repr__(self):
+        return f"<PhotoGalerie {self.titre}>"
 
 
 class Event(db.Model):

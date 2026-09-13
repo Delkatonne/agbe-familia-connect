@@ -17,9 +17,40 @@
         {% if mon_profil and mon_profil.profession %}
             <p>Profession : {{ mon_profil.profession }}</p>
         {% endif %}
+        {% if mon_profil and mon_profil.telephone %}
+            <p>Téléphone : {{ mon_profil.telephone }}</p>
+        {% endif %}
         {% if mon_profil and mon_profil.biographie %}
             <p>{{ mon_profil.biographie }}</p>
         {% endif %}
+
+        {% if mon_profil and mon_profil.champs_personnalises %}
+            <div class="champs-perso">
+                {% for champ in mon_profil.champs_personnalises %}
+                    <div class="champ-perso">
+                        <span><strong>{{ champ.titre }}</strong> : {{ champ.valeur }}</span>
+                        <form method="POST" action="{{ url_for('espace.supprimer_champ', champ_id=champ.id) }}"
+                              onsubmit="return confirm('Supprimer cette information ?');">
+                            <button type="submit" class="btn-lien-danger" title="Supprimer">✕</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if mon_profil %}
+            <details class="ajout-champ">
+                <summary>+ Ajouter une information</summary>
+                <form method="POST" action="{{ url_for('espace.ajouter_champ', membre_id=mon_profil.id) }}" class="auth-form">
+                    <label>Titre (ex : Passion, Groupe sanguin, Réseau social...)</label>
+                    <input type="text" name="titre" required>
+                    <label>Valeur</label>
+                    <input type="text" name="valeur" required>
+                    <button type="submit" class="btn">Ajouter</button>
+                </form>
+            </details>
+        {% endif %}
+
         <a href="{{ url_for('espace.modifier_profil') }}" class="btn">Modifier mes informations</a>
     </div>
 
@@ -39,9 +70,35 @@
                         <p class="card-dates">Né(e) le {{ parent.date_naissance.strftime('%d/%m/%Y') }}</p>
                     {% endif %}
                     {% if parent.profession %}<p>Profession : {{ parent.profession }}</p>{% endif %}
+                    {% if parent.telephone %}<p>Téléphone : {{ parent.telephone }}</p>{% endif %}
                     {% if parent.biographie %}<p>{{ parent.biographie }}</p>{% endif %}
 
-                    <div style="display: flex; gap: 10px; margin-top: 12px;">
+                    {% if parent.champs_personnalises %}
+                        <div class="champs-perso">
+                            {% for champ in parent.champs_personnalises %}
+                                <div class="champ-perso">
+                                    <span><strong>{{ champ.titre }}</strong> : {{ champ.valeur }}</span>
+                                    <form method="POST" action="{{ url_for('espace.supprimer_champ', champ_id=champ.id) }}"
+                                          onsubmit="return confirm('Supprimer cette information ?');">
+                                        <button type="submit" class="btn-lien-danger" title="Supprimer">✕</button>
+                                    </form>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <details class="ajout-champ">
+                        <summary>+ Ajouter une information</summary>
+                        <form method="POST" action="{{ url_for('espace.ajouter_champ', membre_id=parent.id) }}" class="auth-form">
+                            <label>Titre</label>
+                            <input type="text" name="titre" required>
+                            <label>Valeur</label>
+                            <input type="text" name="valeur" required>
+                            <button type="submit" class="btn">Ajouter</button>
+                        </form>
+                    </details>
+
+                    <div style="display: flex; gap: 10px;">
                         <a href="{{ url_for('espace.modifier_parent', parent_id=parent.id) }}" class="btn">Modifier</a>
                         <form method="POST" action="{{ url_for('espace.supprimer_parent', parent_id=parent.id) }}"
                               onsubmit="return confirm('Supprimer ce parent de votre espace ?');">

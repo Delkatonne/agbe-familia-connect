@@ -23,6 +23,10 @@
         <input type="text" id="profession" name="profession"
                value="{{ mon_profil.profession if mon_profil else '' }}" placeholder="ex : Étudiant, Développeur">
 
+        <label for="telephone">Numéro de téléphone</label>
+        <input type="tel" id="telephone" name="telephone"
+               value="{{ mon_profil.telephone if mon_profil else '' }}" placeholder="ex : +229 XX XX XX XX">
+
         <label for="biographie">À propos de moi</label>
         <textarea id="biographie" name="biographie" rows="4">{{ mon_profil.biographie if mon_profil else '' }}</textarea>
 

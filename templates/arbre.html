@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Arbre généalogique — AGBE FAMILY{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <h2>Arbre généalogique</h2>
+    <p style="margin-bottom: 24px; color: #666; font-size: 14px;">
+        Chaque membre inscrit apparaît avec les parents qu'il a renseignés dans son espace personnel.
+    </p>
+
+    {% if foyers %}
+        {% for foyer in foyers %}
+            <div class="arbre-unite">
+                {% if foyer.pere or foyer.mere %}
+                    <div class="arbre-generation">
+                        {% if foyer.pere %}
+                            <div class="arbre-noeud">
+                                {% if foyer.pere.photo_data %}
+                                    <img src="{{ foyer.pere.photo_data }}" alt="{{ foyer.pere.nom }}">
+                                {% endif %}
+                                <span>{{ foyer.pere.nom }}</span>
+                                <small>Père</small>
+                            </div>
+                        {% endif %}
+                        {% if foyer.mere %}
+                            <div class="arbre-noeud">
+                                {% if foyer.mere.photo_data %}
+                                    <img src="{{ foyer.mere.photo_data }}" alt="{{ foyer.mere.nom }}">
+                                {% endif %}
+                                <span>{{ foyer.mere.nom }}</span>
+                                <small>Mère</small>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="arbre-trait"></div>
+                {% endif %}
+
+                <div class="arbre-generation">
+                    <div class="arbre-noeud arbre-noeud-soi">
+                        {% if foyer.photo_data %}
+                            <img src="{{ foyer.photo_data }}" alt="{{ foyer.nom }}">
+                        {% endif %}
+                        <span>{{ foyer.nom }}</span>
+                        {% if not foyer.pere and not foyer.mere %}
+                            <small>Aucun parent renseigné</small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Aucun membre inscrit pour le moment.</p>
+    {% endif %}
+</section>
+{% endblock %}

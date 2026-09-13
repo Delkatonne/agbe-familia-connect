@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Ajouter une photo — AGBE FAMILY{% endblock %}
+
+{% block content %}
+<section class="form-section">
+    <h2>Ajouter une photo à la galerie</h2>
+
+    <form method="POST" class="auth-form" enctype="multipart/form-data">
+        <label for="photo">Photo</label>
+        <input type="file" id="photo" name="photo" accept="image/*" required>
+
+        <label for="titre">Titre (optionnel)</label>
+        <input type="text" id="titre" name="titre" placeholder="ex : Réunion de Noël 2025">
+
+        <label for="description">Description (optionnelle)</label>
+        <textarea id="description" name="description" rows="3"></textarea>
+
+        <button type="submit" class="btn">Ajouter à la galerie</button>
+    </form>
+
+    <p class="form-footer">
+        <a href="{{ url_for('galerie.index') }}">← Retour à la galerie</a>
+    </p>
+</section>
+{% endblock %}

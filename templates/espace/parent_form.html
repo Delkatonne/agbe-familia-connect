@@ -28,6 +28,10 @@
         <label for="profession">Profession(s)</label>
         <input type="text" id="profession" name="profession" value="{{ parent.profession if parent else '' }}">
 
+        <label for="telephone">Numéro de téléphone</label>
+        <input type="tel" id="telephone" name="telephone"
+               value="{{ parent.telephone if parent else '' }}" placeholder="ex : +229 XX XX XX XX">
+
         <label for="biographie">Notes / biographie</label>
         <textarea id="biographie" name="biographie" rows="4">{{ parent.biographie if parent else '' }}</textarea>
 

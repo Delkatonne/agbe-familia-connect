@@ -17,11 +17,15 @@ def appliquer_migrations():
         "ALTER TABLE users ADD COLUMN IF NOT EXISTS nom_profil VARCHAR(100)",
         "ALTER TABLE users ADD COLUMN IF NOT EXISTS date_naissance DATE",
         "ALTER TABLE users ADD COLUMN IF NOT EXISTS profession VARCHAR(200)",
+        "ALTER TABLE users ADD COLUMN IF NOT EXISTS telephone VARCHAR(30)",
         "ALTER TABLE family_members ADD COLUMN IF NOT EXISTS profession VARCHAR(200)",
+        "ALTER TABLE family_members ADD COLUMN IF NOT EXISTS telephone VARCHAR(30)",
         "ALTER TABLE family_members ADD COLUMN IF NOT EXISTS lien_parente VARCHAR(50)",
         "ALTER TABLE family_members ADD COLUMN IF NOT EXISTS est_soi BOOLEAN DEFAULT FALSE",
         "ALTER TABLE family_members ADD COLUMN IF NOT EXISTS proprietaire_id INTEGER REFERENCES users(id)",
         "ALTER TABLE family_members ADD COLUMN IF NOT EXISTS photo_data TEXT",
+        "ALTER TABLE family_members ADD COLUMN IF NOT EXISTS pere_id INTEGER REFERENCES family_members(id)",
+        "ALTER TABLE family_members ADD COLUMN IF NOT EXISTS mere_id INTEGER REFERENCES family_members(id)",
     ]
     for instruction in instructions:
         try:

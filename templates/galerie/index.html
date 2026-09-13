@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Galerie — AGBE FAMILY{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <h2>Galerie familiale</h2>
+    <p style="margin-bottom: 20px;"><a href="{{ url_for('galerie.ajouter') }}" class="btn">+ Ajouter une photo</a></p>
+
+    {% if photos %}
+        <div class="galerie-grid">
+            {% for photo in photos %}
+                <div class="galerie-item">
+                    <img src="{{ photo.photo_data }}" alt="{{ photo.titre or 'Photo de famille' }}">
+                    {% if photo.titre %}<p class="galerie-titre">{{ photo.titre }}</p>{% endif %}
+                    {% if photo.description %}<p class="galerie-description">{{ photo.description }}</p>{% endif %}
+                    <p class="galerie-meta">
+                        Ajoutée par {{ photo.proprietaire.nom_profil or photo.proprietaire.nom if photo.proprietaire else '?' }}
+                        le {{ photo.date_ajout.strftime('%d/%m/%Y') }}
+                    </p>
+                    {% if photo.proprietaire_id == current_user.id %}
+                        <form method="POST" action="{{ url_for('galerie.supprimer', photo_id=photo.id) }}"
+                              onsubmit="return confirm('Supprimer cette photo de la galerie ?');">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Aucune photo pour le moment. Sois le premier à en ajouter une !</p>
+    {% endif %}
+</section>
+{% endblock %}
