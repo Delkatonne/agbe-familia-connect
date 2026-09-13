@@ -10,7 +10,7 @@
         <div class="card-grid">
             {% for membre in membres %}
                 <div class="card">
-                    <img src="{{ membre.photo_url or url_for('static', filename='img/exemple-membre.jpg') }}" alt="{{ membre.nom }}">
+                    <img src="{{ membre.photo_data or membre.photo_url or url_for('static', filename='img/exemple-membre.jpg') }}" alt="{{ membre.nom }}">
                     <h3>{{ membre.nom }}</h3>
                     {% if membre.lien_parente %}<p class="card-meta">{{ membre.lien_parente }}{% if membre.proprietaire %} (ajouté par {{ membre.proprietaire.nom_profil or membre.proprietaire.nom }}){% endif %}</p>{% endif %}
                     <p class="card-dates">

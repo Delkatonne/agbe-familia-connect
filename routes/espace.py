@@ -1,3 +1,4 @@
+import base64
 from datetime import datetime
 
 from flask import Blueprint, render_template, redirect, url_for, request, flash, abort
@@ -8,6 +9,9 @@ from models import FamilyMember
 
 espace_bp = Blueprint("espace", __name__, url_prefix="/mon-espace")
 
+TYPES_IMAGE_AUTORISES = {"image/jpeg", "image/png", "image/webp", "image/gif"}
+TAILLE_IMAGE_MAX = 2 * 1024 * 1024  # 2 Mo
+
 
 def _parse_date(valeur):
     if not valeur:
@@ -16,6 +20,26 @@ def _parse_date(valeur):
         return datetime.strptime(valeur, "%Y-%m-%d").date()
     except ValueError:
         return None
+
+
+def _traiter_photo(fichier):
+    """
+    Retourne (photo_data, erreur).
+    - photo_data est None si aucun fichier n'a été fourni (on garde l'ancienne photo).
+    - erreur est une chaîne à afficher si le fichier fourni est invalide.
+    """
+    if not fichier or not fichier.filename:
+        return None, None
+
+    if fichier.mimetype not in TYPES_IMAGE_AUTORISES:
+        return None, "Format d'image non supporté (JPEG, PNG, WEBP ou GIF uniquement)."
+
+    contenu = fichier.read()
+    if len(contenu) > TAILLE_IMAGE_MAX:
+        return None, "L'image dépasse la taille maximale autorisée (2 Mo)."
+
+    encode = base64.b64encode(contenu).decode("utf-8")
+    return f"data:{fichier.mimetype};base64,{encode}", None
 
 
 @espace_bp.route("/")
@@ -47,6 +71,11 @@ def modifier_profil():
             flash("Le nom de profil est obligatoire.", "error")
             return render_template("espace/modifier_profil.html", mon_profil=mon_profil)
 
+        photo_data, erreur_photo = _traiter_photo(request.files.get("photo"))
+        if erreur_photo:
+            flash(erreur_photo, "error")
+            return render_template("espace/modifier_profil.html", mon_profil=mon_profil)
+
         current_user.nom_profil = nom_profil
         current_user.date_naissance = date_naissance
         current_user.profession = profession
@@ -56,12 +85,15 @@ def modifier_profil():
             mon_profil.date_naissance = date_naissance
             mon_profil.profession = profession
             mon_profil.biographie = biographie
+            if photo_data:
+                mon_profil.photo_data = photo_data
         else:
             mon_profil = FamilyMember(
                 nom=nom_profil,
                 date_naissance=date_naissance,
                 profession=profession,
                 biographie=biographie,
+                photo_data=photo_data,
                 est_soi=True,
                 proprietaire_id=current_user.id,
             )
@@ -88,12 +120,18 @@ def ajouter_parent():
             flash("Le nom est obligatoire.", "error")
             return render_template("espace/parent_form.html", parent=None)
 
+        photo_data, erreur_photo = _traiter_photo(request.files.get("photo"))
+        if erreur_photo:
+            flash(erreur_photo, "error")
+            return render_template("espace/parent_form.html", parent=None)
+
         parent = FamilyMember(
             nom=nom,
             lien_parente=lien_parente,
             date_naissance=date_naissance,
             profession=profession,
             biographie=biographie,
+            photo_data=photo_data,
             est_soi=False,
             proprietaire_id=current_user.id,
         )
@@ -120,11 +158,19 @@ def modifier_parent(parent_id):
             flash("Le nom est obligatoire.", "error")
             return render_template("espace/parent_form.html", parent=parent)
 
+        photo_data, erreur_photo = _traiter_photo(request.files.get("photo"))
+        if erreur_photo:
+            flash(erreur_photo, "error")
+            return render_template("espace/parent_form.html", parent=parent)
+
         parent.nom = nom
         parent.lien_parente = request.form.get("lien_parente", "").strip()
         parent.date_naissance = _parse_date(request.form.get("date_naissance"))
         parent.profession = request.form.get("profession", "").strip()
         parent.biographie = request.form.get("biographie", "").strip()
+        if photo_data:
+            parent.photo_data = photo_data
+
         db.session.commit()
         flash("Informations mises à jour.", "success")
         return redirect(url_for("espace.index"))

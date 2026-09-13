@@ -36,6 +36,7 @@ class FamilyMember(db.Model):
     date_deces = db.Column(db.Date, nullable=True)
     biographie = db.Column(db.Text, nullable=True)
     photo_url = db.Column(db.String(300), nullable=True)
+    photo_data = db.Column(db.Text, nullable=True)  # image envoyée par l'utilisateur (data URI base64)
     profession = db.Column(db.String(200), nullable=True)
 
     # Lien de parenté affiché (ex: "Père", "Mère", "Autre") — vide si c'est le profil de l'utilisateur lui-même

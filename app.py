@@ -25,13 +25,12 @@ def create_app():
     app.register_blueprint(espace_bp)
 
     with app.app_context():
-        from migrations import appliquer_migrations, purger_profils_demo
-        from seed_data import inserer_contenu_exemple
+        from migrations import appliquer_migrations, purger_profils_demo, purger_contenu_demo
 
         db.create_all()
         appliquer_migrations()
         purger_profils_demo()
-        inserer_contenu_exemple()
+        purger_contenu_demo()
 
     return app
 

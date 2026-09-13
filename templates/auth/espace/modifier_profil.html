@@ -6,7 +6,11 @@
 <section class="form-section">
     <h2>Modifier mes informations</h2>
 
-    <form method="POST" class="auth-form">
+    {% if mon_profil and mon_profil.photo_data %}
+        <img src="{{ mon_profil.photo_data }}" alt="Photo de profil" class="photo-preview">
+    {% endif %}
+
+    <form method="POST" class="auth-form" enctype="multipart/form-data">
         <label for="nom_profil">Nom de profil</label>
         <input type="text" id="nom_profil" name="nom_profil"
                value="{{ (mon_profil.nom if mon_profil else current_user.nom_profil) or current_user.nom }}" required>
@@ -21,6 +25,9 @@
 
         <label for="biographie">À propos de moi</label>
         <textarea id="biographie" name="biographie" rows="4">{{ mon_profil.biographie if mon_profil else '' }}</textarea>
+
+        <label for="photo">Photo de profil</label>
+        <input type="file" id="photo" name="photo" accept="image/*">
 
         <button type="submit" class="btn">Enregistrer</button>
     </form>

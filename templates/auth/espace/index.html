@@ -7,6 +7,9 @@
     <h2>Mon espace</h2>
 
     <div class="card" style="max-width: 500px;">
+        {% if mon_profil and mon_profil.photo_data %}
+            <img src="{{ mon_profil.photo_data }}" alt="Photo de profil">
+        {% endif %}
         <h3>{{ mon_profil.nom if mon_profil else (current_user.nom_profil or current_user.nom) }}</h3>
         {% if mon_profil and mon_profil.date_naissance %}
             <p class="card-dates">Né(e) le {{ mon_profil.date_naissance.strftime('%d/%m/%Y') }}</p>
@@ -27,6 +30,9 @@
         <div class="card-grid">
             {% for parent in parents %}
                 <div class="card">
+                    {% if parent.photo_data %}
+                        <img src="{{ parent.photo_data }}" alt="{{ parent.nom }}">
+                    {% endif %}
                     <h3>{{ parent.nom }}</h3>
                     {% if parent.lien_parente %}<p class="card-meta">{{ parent.lien_parente }}</p>{% endif %}
                     {% if parent.date_naissance %}

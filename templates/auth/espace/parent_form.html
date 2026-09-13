@@ -6,7 +6,11 @@
 <section class="form-section">
     <h2>{{ 'Modifier' if parent else 'Ajouter' }} un parent</h2>
 
-    <form method="POST" class="auth-form">
+    {% if parent and parent.photo_data %}
+        <img src="{{ parent.photo_data }}" alt="Photo" class="photo-preview">
+    {% endif %}
+
+    <form method="POST" class="auth-form" enctype="multipart/form-data">
         <label for="nom">Nom complet</label>
         <input type="text" id="nom" name="nom" value="{{ parent.nom if parent else '' }}" required>
 
@@ -26,6 +30,9 @@
 
         <label for="biographie">Notes / biographie</label>
         <textarea id="biographie" name="biographie" rows="4">{{ parent.biographie if parent else '' }}</textarea>
+
+        <label for="photo">Photo</label>
+        <input type="file" id="photo" name="photo" accept="image/*">
 
         <button type="submit" class="btn">Enregistrer</button>
     </form>
