@@ -211,6 +211,34 @@ def supprimer_parent(parent_id):
     return redirect(url_for("espace.index"))
 
 
+@espace_bp.route("/mot-de-passe", methods=["GET", "POST"])
+@login_required
+def modifier_mot_de_passe():
+    if request.method == "POST":
+        ancien = request.form.get("ancien_mot_de_passe", "")
+        nouveau = request.form.get("nouveau_mot_de_passe", "")
+        confirmation = request.form.get("confirmation", "")
+
+        if not current_user.check_password(ancien):
+            flash("Mot de passe actuel incorrect.", "error")
+            return render_template("espace/modifier_mot_de_passe.html")
+
+        if len(nouveau) < 6:
+            flash("Le nouveau mot de passe doit contenir au moins 6 caractères.", "error")
+            return render_template("espace/modifier_mot_de_passe.html")
+
+        if nouveau != confirmation:
+            flash("Les nouveaux mots de passe ne correspondent pas.", "error")
+            return render_template("espace/modifier_mot_de_passe.html")
+
+        current_user.set_password(nouveau)
+        db.session.commit()
+        flash("Mot de passe mis à jour avec succès.", "success")
+        return redirect(url_for("espace.index"))
+
+    return render_template("espace/modifier_mot_de_passe.html")
+
+
 @espace_bp.route("/<int:membre_id>/champs/ajouter", methods=["POST"])
 @login_required
 def ajouter_champ(membre_id):

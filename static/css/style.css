@@ -242,6 +242,29 @@ footer {
     font-size: 14px;
 }
 
+.champ-mot-de-passe {
+    position: relative;
+    display: flex;
+}
+
+.champ-mot-de-passe input {
+    flex: 1;
+    padding-right: 44px;
+}
+
+.btn-oeil {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 17px;
+    padding: 4px 6px;
+    line-height: 1;
+}
+
 /* --- Pages de contenu générales --- */
 .page-section {
     max-width: 1000px;

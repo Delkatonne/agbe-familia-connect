@@ -23,10 +23,16 @@
         <input type="text" id="profession" name="profession" value="{{ profession or '' }}" placeholder="ex : Étudiant, Développeur">
 
         <label for="mot_de_passe">Mot de passe</label>
-        <input type="password" id="mot_de_passe" name="mot_de_passe" required>
+        <div class="champ-mot-de-passe">
+            <input type="password" id="mot_de_passe" name="mot_de_passe" required>
+            <button type="button" class="btn-oeil" onclick="basculerVisibiliteMotDePasse('mot_de_passe', this)" aria-label="Afficher le mot de passe">👁</button>
+        </div>
 
         <label for="confirmation">Confirmer le mot de passe</label>
-        <input type="password" id="confirmation" name="confirmation" required>
+        <div class="champ-mot-de-passe">
+            <input type="password" id="confirmation" name="confirmation" required>
+            <button type="button" class="btn-oeil" onclick="basculerVisibiliteMotDePasse('confirmation', this)" aria-label="Afficher le mot de passe">👁</button>
+        </div>
 
         <button type="submit" class="btn">S'inscrire</button>
     </form>
