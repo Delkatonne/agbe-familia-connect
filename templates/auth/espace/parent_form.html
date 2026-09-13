@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Modifier' if parent else 'Ajouter' }} un parent — AGBE FAMILY{% endblock %}
+
+{% block content %}
+<section class="form-section">
+    <h2>{{ 'Modifier' if parent else 'Ajouter' }} un parent</h2>
+
+    <form method="POST" class="auth-form">
+        <label for="nom">Nom complet</label>
+        <input type="text" id="nom" name="nom" value="{{ parent.nom if parent else '' }}" required>
+
+        <label for="lien_parente">Lien de parenté</label>
+        <select id="lien_parente" name="lien_parente">
+            <option value="Père" {% if parent and parent.lien_parente == 'Père' %}selected{% endif %}>Père</option>
+            <option value="Mère" {% if parent and parent.lien_parente == 'Mère' %}selected{% endif %}>Mère</option>
+            <option value="Autre" {% if parent and parent.lien_parente == 'Autre' %}selected{% endif %}>Autre</option>
+        </select>
+
+        <label for="date_naissance">Date de naissance</label>
+        <input type="date" id="date_naissance" name="date_naissance"
+               value="{{ parent.date_naissance.isoformat() if parent and parent.date_naissance else '' }}">
+
+        <label for="profession">Profession(s)</label>
+        <input type="text" id="profession" name="profession" value="{{ parent.profession if parent else '' }}">
+
+        <label for="biographie">Notes / biographie</label>
+        <textarea id="biographie" name="biographie" rows="4">{{ parent.biographie if parent else '' }}</textarea>
+
+        <button type="submit" class="btn">Enregistrer</button>
+    </form>
+
+    <p class="form-footer">
+        <a href="{{ url_for('espace.index') }}">← Retour à mon espace</a>
+    </p>
+</section>
+{% endblock %}

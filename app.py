@@ -18,15 +18,19 @@ def create_app():
 
     from routes.main import main_bp
     from routes.auth import auth_bp
+    from routes.espace import espace_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(espace_bp)
 
-    # Création automatique des tables + contenu d'exemple au démarrage
-    # (idempotent : ne réinsère rien si les données existent déjà)
     with app.app_context():
+        from migrations import appliquer_migrations, purger_profils_demo
         from seed_data import inserer_contenu_exemple
+
         db.create_all()
+        appliquer_migrations()
+        purger_profils_demo()
         inserer_contenu_exemple()
 
     return app

@@ -10,8 +10,11 @@ class User(UserMixin, db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     nom = db.Column(db.String(100), nullable=False)
+    nom_profil = db.Column(db.String(100), nullable=True)
     email = db.Column(db.String(150), unique=True, nullable=False)
     mot_de_passe_hash = db.Column(db.String(255), nullable=False)
+    date_naissance = db.Column(db.Date, nullable=True)
+    profession = db.Column(db.String(200), nullable=True)
     date_inscription = db.Column(db.DateTime, default=datetime.utcnow)
 
     def set_password(self, mot_de_passe):
@@ -33,10 +36,19 @@ class FamilyMember(db.Model):
     date_deces = db.Column(db.Date, nullable=True)
     biographie = db.Column(db.Text, nullable=True)
     photo_url = db.Column(db.String(300), nullable=True)
+    profession = db.Column(db.String(200), nullable=True)
+
+    # Lien de parenté affiché (ex: "Père", "Mère", "Autre") — vide si c'est le profil de l'utilisateur lui-même
+    lien_parente = db.Column(db.String(50), nullable=True)
+    # True si cette fiche représente l'utilisateur connecté lui-même (créée à l'inscription)
+    est_soi = db.Column(db.Boolean, default=False)
+    # L'utilisateur qui gère cette fiche (lui-même, ou l'un de ses parents qu'il a ajouté)
+    proprietaire_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
+    proprietaire = db.relationship("User", foreign_keys=[proprietaire_id], backref="membres_ajoutes")
 
     # Lien vers un parent (pour construire un arbre généalogique simple)
     parent_id = db.Column(db.Integer, db.ForeignKey("family_members.id"), nullable=True)
-    enfants = db.relationship("FamilyMember", backref=db.backref("parent", remote_side=[id]))
+    enfants = db.relationship("FamilyMember", backref=db.backref("parent", remote_side=[id]), foreign_keys=[parent_id])
 
     def __repr__(self):
         return f"<FamilyMember {self.nom}>"

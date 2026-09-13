@@ -12,15 +12,14 @@
                 <div class="card">
                     <img src="{{ membre.photo_url or url_for('static', filename='img/exemple-membre.jpg') }}" alt="{{ membre.nom }}">
                     <h3>{{ membre.nom }}</h3>
+                    {% if membre.lien_parente %}<p class="card-meta">{{ membre.lien_parente }}{% if membre.proprietaire %} (ajouté par {{ membre.proprietaire.nom_profil or membre.proprietaire.nom }}){% endif %}</p>{% endif %}
                     <p class="card-dates">
                         {% if membre.date_naissance %}Né(e) le {{ membre.date_naissance.strftime('%d/%m/%Y') }}{% endif %}
                         {% if membre.date_deces %} — Décédé(e) le {{ membre.date_deces.strftime('%d/%m/%Y') }}{% endif %}
                     </p>
+                    {% if membre.profession %}<p>Profession : {{ membre.profession }}</p>{% endif %}
                     {% if membre.biographie %}
                         <p>{{ membre.biographie }}</p>
-                    {% endif %}
-                    {% if membre.parent %}
-                        <p class="card-meta">Enfant de {{ membre.parent.nom }}</p>
                     {% endif %}
                 </div>
             {% endfor %}

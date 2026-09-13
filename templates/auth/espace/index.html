@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Mon espace — AGBE FAMILY{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <h2>Mon espace</h2>
+
+    <div class="card" style="max-width: 500px;">
+        <h3>{{ mon_profil.nom if mon_profil else (current_user.nom_profil or current_user.nom) }}</h3>
+        {% if mon_profil and mon_profil.date_naissance %}
+            <p class="card-dates">Né(e) le {{ mon_profil.date_naissance.strftime('%d/%m/%Y') }}</p>
+        {% endif %}
+        {% if mon_profil and mon_profil.profession %}
+            <p>Profession : {{ mon_profil.profession }}</p>
+        {% endif %}
+        {% if mon_profil and mon_profil.biographie %}
+            <p>{{ mon_profil.biographie }}</p>
+        {% endif %}
+        <a href="{{ url_for('espace.modifier_profil') }}" class="btn">Modifier mes informations</a>
+    </div>
+
+    <h3 style="margin-top: 40px;">Mes parents</h3>
+    <p><a href="{{ url_for('espace.ajouter_parent') }}" class="btn">+ Ajouter un parent</a></p>
+
+    {% if parents %}
+        <div class="card-grid">
+            {% for parent in parents %}
+                <div class="card">
+                    <h3>{{ parent.nom }}</h3>
+                    {% if parent.lien_parente %}<p class="card-meta">{{ parent.lien_parente }}</p>{% endif %}
+                    {% if parent.date_naissance %}
+                        <p class="card-dates">Né(e) le {{ parent.date_naissance.strftime('%d/%m/%Y') }}</p>
+                    {% endif %}
+                    {% if parent.profession %}<p>Profession : {{ parent.profession }}</p>{% endif %}
+                    {% if parent.biographie %}<p>{{ parent.biographie }}</p>{% endif %}
+
+                    <div style="display: flex; gap: 10px; margin-top: 12px;">
+                        <a href="{{ url_for('espace.modifier_parent', parent_id=parent.id) }}" class="btn">Modifier</a>
+                        <form method="POST" action="{{ url_for('espace.supprimer_parent', parent_id=parent.id) }}"
+                              onsubmit="return confirm('Supprimer ce parent de votre espace ?');">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Vous n'avez ajouté aucun parent pour le moment.</p>
+    {% endif %}
+</section>
+{% endblock %}

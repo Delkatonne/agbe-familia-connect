@@ -147,6 +147,27 @@ footer {
     font-size: 15px;
 }
 
+.auth-form textarea,
+.auth-form select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.btn-danger {
+    background: #a33;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-danger:hover {
+    background: #822;
+}
+
 .auth-form .btn {
     margin-top: 20px;
     border: none;

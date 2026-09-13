@@ -1,44 +1,17 @@
 """
-Contenu d'exemple inséré automatiquement au démarrage de l'application
-(une seule fois : chaque bloc vérifie que la table est vide avant d'ajouter).
+Contenu d'exemple pour les événements et le patrimoine, inséré une seule
+fois (chaque bloc vérifie que la table est vide avant d'ajouter).
+
+Les profils de membres ne sont PAS créés ici : chaque personne crée le
+sien en s'inscrivant sur le site, dans "Mon espace".
 """
 from datetime import date
 
 from extensions import db
-from models import FamilyMember, Event, HeritageItem
+from models import Event, HeritageItem
 
 
 def inserer_contenu_exemple():
-    if FamilyMember.query.count() == 0:
-        grand_pere = FamilyMember(
-            nom="Jean AGBE",
-            date_naissance=date(1945, 3, 12),
-            date_deces=date(2018, 7, 4),
-            biographie="Fondateur de la famille moderne, agriculteur et sage du village.",
-            photo_url="/static/img/exemple-membre.jpg",
-        )
-        db.session.add(grand_pere)
-        db.session.flush()
-
-        pere = FamilyMember(
-            nom="Paul AGBE",
-            date_naissance=date(1970, 6, 20),
-            biographie="Fils aîné, enseignant et responsable du patrimoine familial.",
-            photo_url="/static/img/exemple-membre.jpg",
-            parent_id=grand_pere.id,
-        )
-        db.session.add(pere)
-        db.session.flush()
-
-        enfant = FamilyMember(
-            nom="Aaron AGBE",
-            date_naissance=date(2000, 1, 15),
-            biographie="Étudiant, passionné d'informatique et de technologie.",
-            photo_url="/static/img/exemple-membre.jpg",
-            parent_id=pere.id,
-        )
-        db.session.add(enfant)
-
     if Event.query.count() == 0:
         db.session.add_all([
             Event(
