@@ -23,8 +23,8 @@
         <a href="{{ url_for('espace.modifier_profil') }}" class="btn">Modifier mes informations</a>
     </div>
 
-    <h3 style="margin-top: 40px;">Mes parents</h3>
-    <p><a href="{{ url_for('espace.ajouter_parent') }}" class="btn">+ Ajouter un parent</a></p>
+    <h3 style="margin-top: 40px; margin-bottom: 16px;">Mes parents</h3>
+    <p style="margin-bottom: 20px;"><a href="{{ url_for('espace.ajouter_parent') }}" class="btn">+ Ajouter un parent</a></p>
 
     {% if parents %}
         <div class="card-grid">
