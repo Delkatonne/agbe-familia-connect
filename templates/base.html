@@ -11,7 +11,9 @@
     <header>
         <h1><a href="{{ url_for('main.accueil') }}">AGBE FAMILY</a></h1>
 
-        <nav>
+        <button id="bouton-menu" class="bouton-menu" onclick="basculerMenu()" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+
+        <nav id="nav-principale">
             <a href="{{ url_for('main.accueil') }}">Accueil</a>
             {% if current_user.is_authenticated %}
                 <a href="{{ url_for('main.famille') }}">La famille</a>

@@ -39,6 +39,45 @@ nav a {
     text-decoration: none;
 }
 
+.bouton-menu {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px 8px;
+}
+
+@media (max-width: 860px) {
+    header {
+        flex-wrap: wrap;
+        padding: 16px 20px;
+    }
+
+    .bouton-menu {
+        display: block;
+    }
+
+    nav {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        gap: 0;
+        margin-top: 16px;
+    }
+
+    nav.nav-ouverte {
+        display: flex;
+    }
+
+    nav a {
+        padding: 14px 4px;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+    }
+}
+
 nav a:hover {
     text-decoration: underline;
 }
