@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 
 from extensions import db
 from models import PhotoGalerie
-from utils import traiter_media
+from utils import traiter_photo
 
 galerie_bp = Blueprint("galerie", __name__, url_prefix="/galerie")
 
@@ -22,21 +22,20 @@ def ajouter():
         titre = request.form.get("titre", "").strip()
         description = request.form.get("description", "").strip()
 
-        media_data, type_media, erreur = traiter_media(request.files.get("fichier"))
-        if not media_data:
-            flash(erreur or "Merci de choisir un fichier.", "error")
+        photo_data, erreur = traiter_photo(request.files.get("photo"))
+        if not photo_data:
+            flash(erreur or "Merci de choisir une photo.", "error")
             return render_template("galerie/ajouter.html")
 
         photo = PhotoGalerie(
             titre=titre or None,
             description=description or None,
-            photo_data=media_data,
-            type_media=type_media,
+            photo_data=photo_data,
             proprietaire_id=current_user.id,
         )
         db.session.add(photo)
         db.session.commit()
-        flash("Ajouté à la galerie.", "success")
+        flash("Photo ajoutée à la galerie.", "success")
         return redirect(url_for("galerie.index"))
 
     return render_template("galerie/ajouter.html")
@@ -53,5 +52,5 @@ def supprimer(photo_id):
 
     db.session.delete(photo)
     db.session.commit()
-    flash("Supprimé de la galerie.", "info")
+    flash("Photo supprimée.", "info")
     return redirect(url_for("galerie.index"))
