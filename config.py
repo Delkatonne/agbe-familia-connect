@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -6,6 +7,9 @@ load_dotenv()
 class Config:
     # Clé secrète pour les sessions Flask (cookies signés, protection CSRF de base)
     SECRET_KEY = os.environ.get("SECRET_KEY", "change-moi-en-production")
+
+    # Durée pendant laquelle la connexion reste active sans avoir à se reconnecter
+    REMEMBER_COOKIE_DURATION = timedelta(days=30)
 
     # URL de connexion à la base PostgreSQL (Neon ou Aiven)
     # Format attendu : postgresql://user:password@host:port/dbname?sslmode=require

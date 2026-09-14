@@ -92,7 +92,7 @@ def login():
         utilisateur = User.query.filter_by(email=email).first()
 
         if utilisateur and utilisateur.check_password(mot_de_passe):
-            login_user(utilisateur)
+            login_user(utilisateur, remember=True)
             page_suivante = request.args.get("next")
             flash(f"Bienvenue, {utilisateur.nom_profil or utilisateur.nom} !", "success")
             return redirect(page_suivante or url_for("main.accueil"))

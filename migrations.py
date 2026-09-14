@@ -29,6 +29,7 @@ def appliquer_migrations():
         "ALTER TABLE events ADD COLUMN IF NOT EXISTS proprietaire_id INTEGER REFERENCES users(id)",
         "ALTER TABLE heritage_items ADD COLUMN IF NOT EXISTS proprietaire_id INTEGER REFERENCES users(id)",
         "ALTER TABLE heritage_items ADD COLUMN IF NOT EXISTS photo_data TEXT",
+        "ALTER TABLE photos_galerie ADD COLUMN IF NOT EXISTS type_media VARCHAR(10) DEFAULT 'image'",
     ]
     for instruction in instructions:
         try:

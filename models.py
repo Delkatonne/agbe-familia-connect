@@ -79,13 +79,14 @@ class ChampPersonnalise(db.Model):
 
 
 class PhotoGalerie(db.Model):
-    """Photo partagée dans la galerie familiale (pas liée à un profil précis)."""
+    """Photo, vidéo ou audio partagé dans la galerie familiale."""
     __tablename__ = "photos_galerie"
 
     id = db.Column(db.Integer, primary_key=True)
     titre = db.Column(db.String(200), nullable=True)
     description = db.Column(db.Text, nullable=True)
     photo_data = db.Column(db.Text, nullable=False)
+    type_media = db.Column(db.String(10), nullable=False, default="image")  # image, video ou audio
     proprietaire_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
     date_ajout = db.Column(db.DateTime, default=datetime.utcnow)
 
